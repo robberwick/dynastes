@@ -1,33 +1,33 @@
 // Espresso RC control code
 #include <Servo.h>
 
-const int throttleRCPin = 2; // RC input pin 'elevator', used for forward/reverse
+const int throttleRCPin = 3; // RC input pin 'elevator', used for forward/reverse
 //observed neutral ~1500-1530
 // observed max: ~1870-1900
 //observed min: ~1020-1050
-const int steeringRCPin = 3; // RC input pin, 'aileron', used for steering
+const int steeringRCPin = 4; // RC input pin, 'aileron', used for steering
 // observed neutral ~1460-1485
 // observed max: ~1880-1910
 // observed min: ~1040-1060
-// const int LifterRCPin = 4; // RC input pin, 'throttle', used for lifter
+// const int LifterRCPin = 5; // RC input pin, 'throttle', used for lifter
 const int LeftESCPin = 10; // ESC output pin to LHS motors
 const int RightESCPin = 11; // ESC output pin to RHS motors
-const int LifterESCPin = 17; // ESC output pin to lifter motors
-const int LifterPotPin = 15; // Analog input pin to determin lifter position
+const int LifterESCPin = 9; // ESC output pin to lifter motors
+const int LifterPotPin = 19; // Analog input pin to determin lifter position
 
 // Constants for determining ESC parameters
-const int ESC_OUTPUT_MAX = 2300;
-const int ESC_OUTPUT_MIN = 700;
-const int THROTTLE_GAIN = 5;
+const int ESC_OUTPUT_MAX = 2000;
+const int ESC_OUTPUT_MIN = 900;
+const int THROTTLE_GAIN = 2.5;
 
 // RC Receiver params
 const int PULSEIN_TIMEOUT = 25000;
-const int RC_FAILSAFE_MIN = 500;
+const int RC_FAILSAFE_MIN = 800;
 
 long LastTriggered;
 long EndTime;
 long LastAuto = 0;
-const int STEERING_NEUTRAL = 1500;
+const int STEERING_NEUTRAL = 1472;
 const int THROTTLE_NEUTRAL = 1500;
 int steeringSignal = STEERING_NEUTRAL;
 int throttleSignal = THROTTLE_NEUTRAL;
@@ -79,9 +79,12 @@ void RCMode() {
   // Serial.print(steeringSignal);
   // Serial.print(", Left output: ");
   // Serial.print(constrain((-throttleSignal + steeringSignal) / 2 + 1500, ESC_OUTPUT_MIN, ESC_OUTPUT_MAX));
+
   LeftESC.write(constrain((-throttleSignal + steeringSignal) / 2 + 1500, ESC_OUTPUT_MIN, ESC_OUTPUT_MAX));
+
   // Serial.print(", Right output: ");
   // Serial.print(constrain((throttleSignal + steeringSignal) / 2, ESC_OUTPUT_MIN, ESC_OUTPUT_MAX));
+
   RightESC.write(constrain((throttleSignal + steeringSignal) / 2, ESC_OUTPUT_MIN, ESC_OUTPUT_MAX));
 
   // LifterPosition = analogRead(LifterPotPin);
